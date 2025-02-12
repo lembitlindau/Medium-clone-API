@@ -13,37 +13,55 @@ A RESTful API implementation inspired by Medium.com, built with Express.js and d
 
 - Node.js
 - Express.js
+- MongoDB
+- Docker & Docker Compose
 - Swagger/OpenAPI 3.0
 - JSON Web Tokens (JWT)
 
-## API Documentation
+## Prerequisites
 
-The API is documented using OpenAPI 3.0 specification. You can view the interactive documentation by running the server and visiting the Swagger UI endpoint.
+- Docker and Docker Compose installed
+- Node.js (v14 or higher)
+- npm
 
+## Environment Setup
 
+1. **Create Environment File:**
+   Copy the example environment file and configure it:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   The `.env` file should contain:
+   ```
+   PORT=9999
+   MONGODB_URI=mongodb://localhost:27017/medium-clone
+   JWT_SECRET=your-jwt-secret-key
+   ME_CONFIG_BASICAUTH_USERNAME=admin
+   ME_CONFIG_BASICAUTH_PASSWORD=pass
+   ```
 
-## Käivitamine
+## Getting Started
 
-Järgi alltoodud samme projekti käivitamiseks:
+1. **Start MongoDB and Mongo Express:**
+   ```bash
+   docker-compose up -d
+   ```
+   This will start:
+   - MongoDB on port 27017
+   - Mongo Express (MongoDB admin interface) on port 8081
 
-1. **Paigalda sõltuvused:**
+2. **Install Dependencies:**
    ```bash
    npm install
    ```
 
-2. **Käivita projekt:**
+3. **Start the Application:**
    ```bash
    npm start
    ```
+   The server will start on the port specified in your .env file (default: 9999)
 
-   Pärast käivitamist peaks server töötama määratud pordil.
-
-
-
-3. **Ava Swagger UI brauseris:**
-   ```
-   http://localhost:9999/api-docs
-   ```
-
-
-
+4. **Access the Services:**
+   - API Documentation (Swagger UI): http://localhost:9999/api-docs
+   - MongoDB Admin Interface: http://localhost:8081
