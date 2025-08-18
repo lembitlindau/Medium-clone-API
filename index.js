@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const articleTagRoutes = require('./routes/articleTagRoutes');
+const sessionRoutes = require('./routes/sessionRoutes');
 
 const app = express();
 const port = process.env.PORT || 9999;
@@ -27,6 +28,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use('/users', userRoutes);
 app.use('/articles', articleRoutes);
 app.use('/tags', tagRoutes);
+app.use('/sessions', sessionRoutes);
 app.use('/', articleTagRoutes); // Article-tag relationship routes
 
 // Import and use the Swagger configuration

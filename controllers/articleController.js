@@ -20,6 +20,45 @@ exports.getAllArticles = async (req, res) => {
 
 exports.createArticle = async (req, res) => {
     try {
+        const { title, content, authorId } = req.body;
+
+        // Validate required fields
+        const missingFields = [];
+        if (!title) missingFields.push('title');
+        if (!content) missingFields.push('content');
+        if (!authorId) missingFields.push('authorId');
+
+        if (missingFields.length > 0) {
+            return res.status(BAD_REQUEST.code).json({
+                status: BAD_REQUEST.code,
+                message: 'Required fields are missing',
+                missingFields
+            });
+        }
+
+        // Validate field types
+        if (typeof title !== 'string') {
+            return res.status(BAD_REQUEST.code).json({
+                status: BAD_REQUEST.code,
+                message: 'Title must be a string',
+                field: 'title'
+            });
+        }
+        if (typeof content !== 'string') {
+            return res.status(BAD_REQUEST.code).json({
+                status: BAD_REQUEST.code,
+                message: 'Content must be a string',
+                field: 'content'
+            });
+        }
+        if (typeof authorId !== 'string') {
+            return res.status(BAD_REQUEST.code).json({
+                status: BAD_REQUEST.code,
+                message: 'AuthorId must be a string',
+                field: 'authorId'
+            });
+        }
+
         const article = new Article(req.body);
         const newArticle = await article.save();
         const location = `/articles/${newArticle._id}`;
@@ -63,6 +102,54 @@ exports.getArticle = async (req, res) => {
 
 exports.updateArticle = async (req, res) => {
     try {
+        const article = await Article.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!article) {
+            return res.status(NOT_FOUND.code).json({
+                status: NOT_FOUND.code,
+                message: 'Article not found'
+            });
+        }
+        res.status(OK.code).json({
+            status: OK.code,
+            message: 'Article updated successfully',
+            data: article
+        });
+    } catch (error) {
+        res.status(BAD_REQUEST.code).json({
+            status: BAD_REQUEST.code,
+            message: BAD_REQUEST.message,
+            error: error.message
+        });
+    }
+};
+
+exports.patchArticle = async (req, res) => {
+    try {
+        const { title, content, authorId } = req.body;
+
+        // Validate field types if they exist
+        if (title !== undefined && typeof title !== 'string') {
+            return res.status(BAD_REQUEST.code).json({
+                status: BAD_REQUEST.code,
+                message: 'Title must be a string',
+                field: 'title'
+            });
+        }
+        if (content !== undefined && typeof content !== 'string') {
+            return res.status(BAD_REQUEST.code).json({
+                status: BAD_REQUEST.code,
+                message: 'Content must be a string',
+                field: 'content'
+            });
+        }
+        if (authorId !== undefined && typeof authorId !== 'string') {
+            return res.status(BAD_REQUEST.code).json({
+                status: BAD_REQUEST.code,
+                message: 'AuthorId must be a string',
+                field: 'authorId'
+            });
+        }
+
         const article = await Article.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!article) {
             return res.status(NOT_FOUND.code).json({
